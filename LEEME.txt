@@ -1,0 +1,288 @@
+-------------------------------------------------------------
+El Sistema de preisncripcion e inscripcion de nuevos ingresos
+-------------------------------------------------------------
+(los acentos en el texto se los debo... mi teclado es ingles)
+
+La entrada al sistema es similar a los otros programas 
+(censo, intensivo, inscripcion de regulares)
+
+El sistema de inscripcion de nuevos tiene los siguientes programas:
+
+index.php : 
+	Pagina principal que carga la pagina de entrada para la
+	preinscripcion de estudiantes (pint_login.php)
+
+pint_login.php:	
+	Pagina que contiene la definicion de marcos para la entrada 
+	a la preinscripcion: 
+	
+	pint_login_titulo: El encabezado de la UNEXPO
+	pint_login_hora: que solo contiiene la leyenda "la hora actual del sistema es "
+	pint_login_titulo: el titulo del sistema: "Preinscripciones..."
+	hora_actual: script para atualizar la hora del sistema cada 5 minutos.
+	pint_login_form: Contiene el formulario de entrada. Al enviarse (submit)
+		se carga el script planilla_r.php en una nueva ventana de 
+		nombre "planillab" (para efectos de javascript).
+
+planilla_r.php: 
+	Genera la planilla de preinscripcion y de encuesta de datos
+	para dobe. Todos los campos de la planilla estan contenidos en un
+	solo formulario html llamado "datos_p" cuyos campos tienen nombres
+	iguales a los respectivos campos en las tablas de la base de datos
+	ningreso. La planilla es activa y valida "en linea" todos los campos.
+	Para esto, cada campo tiene codigo javascript que se ejecuta en el
+	evento "onChange" (cuando cambia el valor del campo) y en los casos
+	de cajas de texto, tambien en el evento	"onKeyUp" (cuando se pulsa
+	y suelta una tecla) para verificar caracter por caracter la entrada
+	de datos. planilla_r.php requiere del script "inscni.js" para
+	realizar sus operaciones. Cuando se pulsa el boton "procesar"
+	la accion a ejecutar es el script "preinscribir.php"
+
+
+inscni.js:
+	Tiene un conjunto de funciones en javascript para dinamizar la
+	planilla de inscripcion:
+
+	function prepdata() {
+	// Prepara todos los campos con los valores adecuados
+	// antes de enviar el formulario para procesar.
+	// Por ejemplo, arreglar la fecha de nacimiento, concatenar
+	// en uno solo los campos de direccion, determinar si se
+	// agrega la informacion de "OTRO" en campos de seleccion
+	}
+
+	function reiniciarTodo() {
+	// Actualiza la planilla para mostrar la informacion
+	// que se recupero de la base de datos, o al regresar
+	// a planilla_r.php desde preinscribir.php cuando se elige
+	// "modificar datos" o cuando por conflicto no se puede
+	// temporalmente generar un nuevo expediente
+	}
+
+	function calcularEdad() {
+	// calcula la edad a partir de la fecha de nacimiento
+	// se llama cada vez que cambia la fecha
+	}
+
+	function soloBlancos (campo) {
+	// Devuelve "true" si el valor del campo contiene solo
+	// carateres repetidos. Devuelve "false" en otro caso.
+	// Usada por las funciones de validacion de campos
+	}
+
+	function validarN(campo) {
+	// llamada para validar dinamicamente campos numericos.
+	// borra automaticamente cualquier caracter no numerico
+	}
+
+	function validarL(campo) {
+	// llamada para validar dinamicamente campos de solo letras.
+	// borra automaticamente cualquier caracter invalido
+	}
+
+	function validarA(campo) {
+	// llamada para validar dinamicamente campos de letras, numeros y algunos simbolos especiales.
+	// borra automaticamente cualquier caracter invalido
+	}
+
+
+	function validarLetras(campo, longitud, nValido, conMsg) {
+	// Usada para validar campos de solo letras antes de procesar el
+	// formulario. Revisa que "campo" tenga al menos la "longitud" minima
+	// y que los caracteres esten dentro del conjunto compuesto por letras
+	// mayusculas y minusculas, o si "nValido" no es nulo, por los
+	// caracteres de la cadena "nValido". Si "conMsg" es "true" se muestra
+	// un mensaje en caso de error. Marca en amarillo los campos que no
+	// cumplen el formato.
+	}
+
+	function validarAlfaN(campo,longitud, conMsg) {
+	// Similar a la anterior pero para una cadena alfanumerica
+	// Utiliza a validarLetras() para hacer la validacion
+	}
+
+	function validarNum(campo, longitud, conMsg) {
+	// similar a validarLetras pero para numeros.
+	}
+
+	function validarSelect(campo, conMsg) {
+	// devuelve "true" si el campo es un "combo box" 
+	// y se ha seleccionado alguna de las opciones
+	// Devuelve false si no se selecciona ninguna
+	}
+
+	function validar(campo){
+	// Valida un campo cualquiera haciendo uso de las cuatro funciones
+	// validarXXX() anteriores. Para ello, debemos identificar al campo
+	// con un nombre (propiedad "id" del campo del formulario) que permita
+	// saber el tipo de campo y la longitud minima.
+	// El formato del "id" del campo es
+	//	NOMBRE_TIPO_LONGITUD
+	// Donde 
+	//	NOMBRE	es cualquier cadena QUE NO contenga el caracter '_'
+	//	TIPO	es uno de los caracteres 'N','L','A','S' para
+	//		indicar que el campo es numerico, letras, alfanumerico o es un "select"
+	//		(combo box) respectivamente
+	//	LONGITUD es un numero que indica la longitud minima requerida para 
+	//		el campo. en el caso del tipo 'S' no se toma en cuenta
+	}
+
+	function anyoBisiesto(anyo){
+	// Revisa si el anyo es bisisesto o no
+	}
+
+	function fechaValida(dia,mes,anyo, conMsg){
+	// revisa si la combinacion, dia,mes,anyo es correcta
+	// anyo no puede ser menor a 1950 ni mayor a 1990
+	// esto se puede editar a conveniencia
+	}
+
+
+	function mostrar_ayuda(ayudaURL) {
+	// abre una ventana emenrgente con el texto de la ayuda
+	// establecido en el script "instrucciones.php"
+	}
+
+	function verificarFecha(f, conMsg){
+	// Verifica cada uno de los campos de fecha y que la combinacion de
+	// estos genere una fecha valida.
+	}
+
+	function validarF(f){
+	// Valida todo el formulario cuando se pulsa el boton 'procesar'
+	}
+
+instrucciones.php:
+	Muestra una lista de las instrucciones para los estudiantes. EDITAR A CONVENIENCIA
+
+preinscribir.php:
+	Recibe la informacion de la planilla e intenta preinscribir al estudiante:
+	//
+	// programa principal;
+	//
+	if(envioValido()) { // El envio es valido si viene de planilla_r.php en el servidor nuestro
+		if(guardarDatos()) { //Si puede guardar los datos reporta
+			reportar($_d['exp_e']);
+		}
+		else {
+			regresar(); //Si no regresa (el servidor esta ocupado o hubo conflicto momentaneo)
+		}
+	}
+	else volveraIndice(); // Si no se llamo desde planilla_r.php regresa al formulario de entrada silenciosamente.
+
+	preinscribir.php incluye a su vez los archivos "reporte_e.php" y "recaudos.php"
+
+inc/reporte_e.php:
+	Este script se debe incluir en preinscribir.php para generar el reporte
+	de preinscripcion. A su vez, incluye a "recaudos.php" para colocar al final 
+	del reporte la fecha de inscripcion para el estudiante y la lista de recaudos
+
+inc/recaudos.php:
+	Muestra la fecha de inscripcion y los recaudos que debe llevar el estudiante..
+	EDITAR A CONVENIENCIA.
+	EDITAR LAS VARIABLES $rangoInsc y $fechaInsc en inc/config.php para
+	colocar los rangos y las fechas para cada rango. Por ejemplo:
+
+	$rangoInsc = array( 0=>50,
+			    1=>100,
+			    2=>150);
+
+	$fechaInsc = array( 0=>'Lunes 02/10/2006 de 9:00 AM a 01:00 PM',
+			    1=>'Martes 03/10/2006 de 9:00 AM a 01:00 PM',
+			    2=>'Mi&eacute;rcoles 04/10/2006 de 9:00 AM a 01:00 PM' );
+
+	Estos valores definen tres rangos o grupos de estudiantes con sus respectivas
+	fechas y horas de inscripcion: 
+		grupo 0: del 1 al 50. Se inscriben el lunes.
+		grupo 1: del 51 al 100. Se inscriben el martes.
+		grupo 2: del 101 al 150. Se inscriben el miercoles.
+
+	Es claro que siguiendo este formato, se peuden agregar/quitar grupos a conveniencia
+	y colocarlos de la cantidad de alumnos que se desee. A cada alumno se le asigna un
+	numero en secuencia (almacenado en exp_e de dace002) por orden de preinscripcion.
+
+act_lista.php:
+	Permite actualizar la tabla lista_nuevos a partir de un archivo .csv.
+	NOTAS:
+
+	POR AHORA, no tiene control de acceso. Asi que cuidado.
+
+	act_lista.php SOBREESCRIBE TODA LA TABLA.
+	el archivo .csv debe tener el siguiente formato:
+
+	CEDULA;APELLIDOS;NOMBRES;C_INGRESO;C_UNI_CA
+	
+	La primera linea del archivo .csv debe ser igual a 
+	la linea de arriba. El campo APELLIDOS puede tener
+	los apellidos y nombres. El campo NOMBRES puede estar vacio
+	pero debe existir. C_INGRESO es el codigo de la forma de
+	ingreso segun la tabla 'ingresos' y C_UNI_CA es el codigo
+	del la carrera segun 'tblaca010'
+
+	Un ejemplo de un archivo .csv valido:
+
+--------- inicio archivo .csv valido (esta linea no va) -------
+CEDULA;APELLIDOS;NOMBRES;C_INGRESO;C_UNI_CA
+14512844;LOVERA JUAREZ RODDY's RANDALL;;1;101
+15393502;ESCALONA S JOSE M;;3;101
+15421529;TOVAR VELÁSQUEZ CARLOS MANUEL;;7;1
+15425760;FIGUEROA PERAZA WILLIAN JOSE;;5;6
+15599204;CARREÑO QUERALES KARINA LISSET;;7;4
+15674164;ROSAS LEAL JORGE LUIS;;1;103
+15996918;TORREALBA LOZADA FERNANDO CARLOS;;1;103
+16278293;HENRIQUEZ ISAACCURA MELISSA CAROLINA;;1;7
+16387437;LINAREZ ESCALONA LUIS JAVIER;;5;5
+20389227;GALARATTI D ELIHANA V;;3;3
+--------- fin archivo .csv valido (esta linea no va) -------
+
+Otros archivos en el directorio inc:
+
+inc/config.php:
+	El archivo de configuracion del sistema. EDITAR A CONVENIENCIA Y NO OLVIDAR
+	COLOCAR la variable $enProduccion en "true" cuando se vaya a produccion el sistema
+
+inc/activaerror.php:
+	Para mostrar los errores solo cuando no estamos en produccion.
+
+inc/csv2sql.php:
+	Usado por act_lista.php para convertir el archivo .csv a sentencias INSERT SQL
+
+inc/upload_class.php:
+	Maneja la "subida" del archivo .csv al servidor. Usado en act_lista.php
+
+inc/vImage.php:
+	Maneja la generacion y autenticacion de la imagen de seguridad.
+
+Otros archivos:
+
+../inc/odbcss_c.php:
+	(El que empezo todo esto)
+	El archivo que define la clase ODBC_Conn para conexiones via ODBC,
+	manejo de archivos de bitacora y transacciones. 
+
+Queda por hacer:
+
+entrada_act_l.php : Entrada con usuario y clave para actualizar la lista de 
+	estudiantes. Dificultad/longitud : FACIL/CORTO
+
+inscribir.php:
+	Para inscribir a los estudiantes y asignarles seccion y expediente.
+	Entrada con usuario y clave. Se basa en reporte_e.php
+	Dificultad/longitud : MEDIA/MEDIA
+
+planilla_i.php:
+	Reporte de inscripcion (muy similar a los de los regulares, se puede
+	usar el mismo script de los regulares y modificarlo un poco para
+	ajustarlo a la inscripcion de los nuevos)
+	Dificultad/longitud : MEDIA/MEDIA
+
+
+planilla_d.php: Muy similar a reporte_e.php pero para los estudiantes
+	ya inscritos. Diferencias: Muestra el expediente y no permite
+	regresar a la planilla de preinscripcion.
+	estudiantes. Dificultad/longitud : FACIL/CORTO
+
+Como ves, ya lo dificil paso. He probado y corregido extensamente
+la preinscripcion, pero se me puede estar escapando algo.
+Prueba y me avisas, tan pronto encuentres errores.
+
